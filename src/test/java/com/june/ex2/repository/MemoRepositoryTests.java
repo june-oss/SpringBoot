@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -28,7 +30,7 @@ public class MemoRepositoryTests {
     public void testInsertDummies(){
 
         IntStream.rangeClosed(1,100).forEach(i -> {
-            Memo memo = Memo.builder().memeText("Sample...."+i).build();
+            Memo memo = Memo.builder().memoText("Sample...."+i).build();
             memoRepository.save(memo);
         });
     }
@@ -68,7 +70,7 @@ public class MemoRepositoryTests {
     @Test
     public void testUpdate(){
 
-        Memo memo = Memo.builder().mno(100L).memeText("Update Text").build();
+        Memo memo = Memo.builder().mno(100L).memoText("Update Text").build();
 
         System.out.println(memoRepository.save(memo));
     }
@@ -108,8 +110,11 @@ public class MemoRepositoryTests {
     @Test
     public void testSort(){
         Sort sort1 = Sort.by("mno").descending();
+        Sort sort2 = Sort.by("memoText").ascending();
+        Sort sortAll = sort1.and(sort2); //and를 이용한 연결
 
-        PageRequest pageable = PageRequest.of(0,10,sort1);
+        Pageable pageable = PageRequest.of(0,10, sortAll);//결합된 정렬 조건 사용
+        //Pageable pageable = PageRequest.of(0,10,sort1);
 
         Page<Memo> result = memoRepository.findAll(pageable);
 
@@ -118,4 +123,29 @@ public class MemoRepositoryTests {
         });
     }
 
+    @Test
+    public void testQueryMethods(){
+        List<Memo> list = memoRepository.findByMnoBetweenOrderByMnoDesc(70L, 80L);
+
+        for(Memo memo : list){
+            System.out.println(memo);
+        }
+    }
+
+    @Test
+    public void testQueryMethodWithPagable(){
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("mno").descending());
+
+        Page<Memo> result = memoRepository.findByMnoBetween(10L, 50L, pageable);
+
+        result.get().forEach(memo -> System.out.println(memo));
+    }
+
+    @Commit
+    @Transactional
+    @Test
+    public void testDeleteQueryMethods(){
+        memoRepository.deleteMemoByMnoLessThan(10L);
+    }
 }

@@ -19,5 +19,5 @@ public class Memo {
     private Long mno;
 
     @Column(length = 200, nullable = false)
-    private String memeText;
+    private String memoText;
 }
