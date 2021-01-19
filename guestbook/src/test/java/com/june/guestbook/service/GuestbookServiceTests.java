@@ -29,7 +29,12 @@ public class GuestbookServiceTests {
     @Test
     public void testList(){
 
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .type("tc")
+                .keyword("수정")
+                .build();
 
         PageResultDTO<GuestbookDTO, Guestbook> resultDTO = service.getList(pageRequestDTO);
 

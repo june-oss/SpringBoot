@@ -8,6 +8,8 @@
         <h1 class="mt-4">GuestBook Modify Page</h1>
         <form action="/guestbook/modify" method="post">
             <input type="hidden" name="page" th:value="${requestDTO.page}">
+            <input type="hidden" name="type" th:value="${requestDTO.type}">
+            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}"
 
             <div class="form-group">
                 <label>Gno</label>
@@ -61,11 +63,14 @@
                     .submit();
             })
 
-            $(".btno-list").click(function(){
-                var pageInfo = $("input[name='page']");
+            $(".listBtn").click(function(){
+                var page = $("input[name='page']");
+                var type = $("input[name='type']");
+                var keyword = $("input[name='keyword']");
 
-                actionForm.empty().append(pageInfo);
-                actionForm.attr("action", "guestbook/list").attr("method", "post")
+                actionForm.empty();
+                actionForm.append(page).append(type).append(keyword);
+                actionForm.attr("action", "/guestbook/list").attr("method", "get")
 
                 //console.log(actionForm.html());
                 actionForm.submit();
