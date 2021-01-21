@@ -1,12 +1,16 @@
 package com.june.board.service;
 
 import com.june.board.dto.BoardDTO;
+import com.june.board.dto.PageRequestDTO;
+import com.june.board.dto.PageResultDTO;
 import com.june.board.entity.Board;
 import com.june.board.entity.Member;
 
 public interface BoardService {
 
     Long register(BoardDTO dto);
+
+    PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
 
     default Board dtoToEntity(BoardDTO dto){
 
@@ -21,4 +25,20 @@ public interface BoardService {
 
         return board;
     }
+
+    default BoardDTO entityToDTO(Board board, Member member, Long replyCount){
+
+        BoardDTO boardDTO = BoardDTO.builder()
+                .bno(board.getBno())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .regDate(board.getRegDate())
+                .modDate(board.getRegDate())
+                .writerEmail(member.getEmail())
+                .writerName(member.getName())
+                .replyCount(replyCount.intValue())
+                .build();
+        return boardDTO;
+    }
+
 }
