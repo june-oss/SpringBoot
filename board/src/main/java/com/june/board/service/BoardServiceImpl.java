@@ -6,11 +6,13 @@ import com.june.board.entity.Member;
 import com.june.board.repository.BoardRepository;
 import com.june.board.dto.BoardDTO;
 import com.june.board.entity.Board;
+import com.june.board.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Function;
 
@@ -20,7 +22,7 @@ import java.util.function.Function;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository repository;
-
+    private final ReplyRepository replyRepository;
     @Override
     public Long register(BoardDTO dto) {
 
@@ -47,5 +49,40 @@ public class BoardServiceImpl implements BoardService{
         return new PageResultDTO<>(result, fn);
     }
 
+    @Override
+    public BoardDTO get(Long bno){
 
+        Object result = repository.getBoardByBno(bno);
+
+        Object[] arr = (Object[]) result;
+
+        return entityToDTO((Board) arr[0], (Member) arr[1], (Long) arr[2]);
+    }
+
+    @Transactional
+    @Override
+    public void removeWithReplies(Long bno){
+
+        replyRepository.deleteByBno(bno);
+
+        repository.deleteById(bno);
+    }
+
+    @Transactional
+    @Override
+    public void modify(BoardDTO boardDTO){
+//        log.info("first:"+boardDTO);
+        Board board = repository.getOne(boardDTO.getBno());
+
+        if(board != null){
+//            log.info(boardDTO.getTitle());
+//            log.info(boardDTO.getContent());
+
+            board.changeTitle(boardDTO.getTitle());
+            board.changeContent(boardDTO.getContent());
+
+//            log.info("modify : " + board);
+            repository.save(board);
+        }
+    }
 }
