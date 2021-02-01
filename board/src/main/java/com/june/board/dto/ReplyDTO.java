@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class ReplyDTO {
-    
+
     private Long rno;
 
     private String text;
