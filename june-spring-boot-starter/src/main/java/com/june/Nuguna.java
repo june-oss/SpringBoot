@@ -1,18 +1,8 @@
 package com.june;
 
-public class Holman {
-
+public class Nuguna {
     String name;
-
     int howLong;
-
-    @Override
-    public String toString() {
-        return "Holman{" +
-                "name='" + name + '\'' +
-                ", howLong=" + howLong +
-                '}';
-    }
 
     public String getName() {
         return name;
@@ -28,5 +18,13 @@ public class Holman {
 
     public void setHowLong(int howLong) {
         this.howLong = howLong;
+    }
+
+    @Override
+    public String toString() {
+        return "nuguna{" +
+                "name='" + name + '\'' +
+                ", howLong=" + howLong +
+                "}";
     }
 }

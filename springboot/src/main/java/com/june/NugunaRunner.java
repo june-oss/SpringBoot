@@ -7,13 +7,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HolmanRunner implements ApplicationRunner {
+public class NugunaRunner implements ApplicationRunner {
 
     @Autowired
-    Holman holman;
+    Nuguna nuguna;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println(holman);
+        System.out.println(nuguna);
     }
 }
